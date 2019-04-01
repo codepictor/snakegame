@@ -6,28 +6,17 @@
 
 
 
-Snake::Snake(const int block_size)
-    : block_size_(block_size)
-{
-}
+extern const int BLOCK_SIZE;
 
 
 
 void Snake::Spawn(const sf::Vector2i& new_position)
 {
     body_.clear();
-    body_.push_back(Segment{
-        new_position,
-        sf::RectangleShape(sf::Vector2f(
-            static_cast<float>(block_size_),
-            static_cast<float>(block_size_)
-        )),
-        sf::Color::Yellow
-    });
+    body_.push_back(Segment{new_position});
 
     SetDirection(Direction::None);
     speed_ = 15;
-    is_lost_ = false;
 }
 
 
@@ -96,14 +85,7 @@ void Snake::Grow()
         return;
     }
 
-    Segment new_segment = {
-        sf::Vector2i(0, 0),
-        sf::RectangleShape(sf::Vector2f(
-            static_cast<float>(block_size_),
-            static_cast<float>(block_size_)
-        )),
-        sf::Color::Green
-    };
+    Segment new_segment = {sf::Vector2i(0, 0)};
     if (body_.size() == 1)
     {
         const Segment& head = body_.front();
@@ -249,19 +231,28 @@ void Snake::Render(sf::RenderWindow& window)
     Segment& head = body_.front();
     head.shape.setFillColor(sf::Color::Yellow);
     head.shape.setPosition(
-        head.position.x * block_size_,
-        head.position.y * block_size_
+        head.position.x * BLOCK_SIZE,
+        head.position.y * BLOCK_SIZE
     );
+    head.shape.setSize(sf::Vector2f(
+        BLOCK_SIZE - 1,
+        BLOCK_SIZE - 1
+    ));
     window.draw(head.shape);
 
     for (size_t i = 1; i < body_.size(); i++)
     {
         body_[i].shape.setFillColor(sf::Color::Green);
         body_[i].shape.setPosition(
-            body_[i].position.x * block_size_,
-            body_[i].position.y * block_size_
+            body_[i].position.x * BLOCK_SIZE,
+            body_[i].position.y * BLOCK_SIZE
         );
+        body_[i].shape.setSize(sf::Vector2f(
+            BLOCK_SIZE - 1,
+            BLOCK_SIZE - 1
+        ));
         window.draw(body_[i].shape);
     }
 }
+
 

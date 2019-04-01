@@ -1,11 +1,19 @@
+#include <cassert>
+
 #include "wall.h"
 
 
 
-Wall::Wall(const int block_size)
-    : block_size_(block_size)
+extern const int BLOCK_SIZE;
+
+
+
+Wall::Wall(const sf::Vector2i& top_left, const sf::Vector2i& bottom_right)
+    : top_left_(top_left)
+    , bottom_right_(bottom_right)
 {
-    shape_.setFillColor(sf::Color::Blue);
+    assert(top_left.x <= bottom_right.x);
+    assert(top_left.y <= bottom_right.y);
 }
 
 
@@ -18,6 +26,15 @@ void Wall::Update(const float dt)
 
 void Wall::Render(sf::RenderWindow& window)
 {
+    shape_.setPosition(top_left_.x * BLOCK_SIZE, top_left_.y * BLOCK_SIZE);
+    shape_.setSize(sf::Vector2f(
+        (bottom_right_.x + 1 - top_left_.x) * BLOCK_SIZE,
+        (bottom_right_.y + 1 - top_left_.y) * BLOCK_SIZE
+    ));
+
+    shape_.setFillColor(sf::Color::Magenta);
+
     window.draw(shape_);
 }
+
 

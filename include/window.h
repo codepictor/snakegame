@@ -10,10 +10,9 @@
 class Window
 {
 public:
-    Window(const std::string& title, const sf::Vector2u& size);
+    Window(const std::string& title, const sf::Vector2i& sizes);
     virtual ~Window();
 
-    sf::Vector2u GetWindowSize();
     bool CheckIsClosed() const;
 
     void Update();
@@ -30,6 +29,6 @@ private:
 
     sf::RenderWindow window_;
     std::string default_title_;
-    sf::Vector2u default_size_;
+    sf::Vector2i default_sizes_;
 };
 

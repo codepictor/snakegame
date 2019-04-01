@@ -15,7 +15,7 @@ class World
     friend class Game;
 
 public:
-    World(const sf::Vector2u& window_size, const int block_size);
+    explicit World(const sf::Vector2i& window_sizes);
     virtual ~World() = default;
 
     void HandleInput();
@@ -26,8 +26,7 @@ public:
 private:
     void HandleCollisions();
 
-    sf::Vector2u window_size_;
-    const int block_size_;
+    sf::Vector2i world_sizes_;
 
     Snake snake_;
     Apple apple_;

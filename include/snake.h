@@ -26,7 +26,7 @@ public:
 
 
 public:
-    explicit Snake(const int block_size);
+    Snake() = default;
     virtual ~Snake() = default;
 
     void Spawn(const sf::Vector2i& new_position);
@@ -51,11 +51,9 @@ private:
     void Move();
 
     std::vector<Segment> body_;
-    int block_size_ = 0;
     Direction direction_ = Direction::None;
     int speed_ = 0;
     int lives_ = 3;
     int score_ = 0;
-    bool is_lost_ = false;
 };
 

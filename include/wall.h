@@ -7,7 +7,7 @@
 class Wall
 {
 public:
-    explicit Wall(const int block_size);
+    Wall(const sf::Vector2i& top_left, const sf::Vector2i& bottom_right);
     virtual ~Wall() = default;
 
     void Update(const float dt);
@@ -15,7 +15,8 @@ public:
 
 
 private:
-    int block_size_;
+    sf::Vector2i top_left_;
+    sf::Vector2i bottom_right_;
 
     sf::RectangleShape shape_;
 };

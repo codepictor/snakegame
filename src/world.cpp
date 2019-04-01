@@ -3,22 +3,34 @@
 #include <iostream>
 
 
-World::World(const sf::Vector2u& window_size, const int block_size)
-    : window_size_(window_size)
-    , block_size_(block_size)
-    , snake_(block_size)
-    , apple_(block_size)
+
+extern const sf::Vector2i WORLD_SIZES;
+
+
+
+World::World(const sf::Vector2i& world_size)
+    : world_sizes_(WORLD_SIZES)
 {
     apple_.Spawn(sf::Vector2i(4, 4));
     snake_.Spawn(sf::Vector2i(7, 7));
 
-    std::cerr << "@@@ " << snake_.GetLivesNumber() << std::endl;
-
     // number of walls is equal to 4 (up, right, down and left walls)
-    for (int i = 0; i < 4; i++)
-    {
-        walls_.push_back(Wall(block_size));
-    }
+    walls_.push_back(Wall(
+        {0, 0},
+        {world_sizes_.x - 1, 0}
+    ));
+    walls_.push_back(Wall(
+        {0, 0},
+        {0, world_sizes_.y - 1}
+    ));
+    walls_.push_back(Wall(
+        {0, world_sizes_.y - 1},
+        {world_sizes_.x - 1, world_sizes_.y - 1}
+    ));
+    walls_.push_back(Wall(
+        {world_sizes_.x - 1, 0},
+        {world_sizes_.x - 1, world_sizes_.y - 1}
+    ));
 }
 
 
@@ -96,4 +108,5 @@ void World::HandleCollisions()
         snake_.IncreaseScore(10);
     }
 }
+
 

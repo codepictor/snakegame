@@ -2,12 +2,7 @@
 
 
 
-Apple::Apple(const int block_size)
-    : block_size_(block_size)
-{
-    shape_.setRadius(static_cast<float>(block_size) / 2.0f);
-    shape_.setFillColor(sf::Color::Red);
-}
+extern const int BLOCK_SIZE;
 
 
 
@@ -33,11 +28,13 @@ void Apple::Update(const float dt)
 
 void Apple::Render(sf::RenderWindow& window)
 {
+    shape_.setRadius(static_cast<float>(BLOCK_SIZE) / 2.0f);
     shape_.setPosition(sf::Vector2f(
-        position_.x * block_size_,
-        position_.y * block_size_
+        position_.x * BLOCK_SIZE,
+        position_.y * BLOCK_SIZE
     ));
-    //shape_.setFillColor
+
+    shape_.setFillColor(sf::Color::Red);
+
     window.draw(shape_);
 }
-

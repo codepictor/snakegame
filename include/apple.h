@@ -7,7 +7,7 @@
 class Apple
 {
 public:
-    explicit Apple(const int block_size);
+    Apple() = default;
     virtual ~Apple() = default;
 
     sf::Vector2i GetPosition() const;
@@ -19,8 +19,6 @@ public:
 
 
 private:
-    int block_size_;
-
     sf::Vector2i position_;
     sf::CircleShape shape_;
 };
