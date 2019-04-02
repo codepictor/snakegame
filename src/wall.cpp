@@ -18,7 +18,7 @@ Wall::Wall(const sf::Vector2i& top_left, const sf::Vector2i& bottom_right)
 
 
 
-bool Wall::CheckIsPointInWall(const sf::Vector2i& point) const
+bool Wall::CheckIsCellInWall(const sf::Vector2i& point) const
 {
     if (top_left_.x <= point.x && point.x <= bottom_right_.x &&
         top_left_.y <= point.y && point.y <= bottom_right_.y)

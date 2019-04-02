@@ -9,8 +9,8 @@ extern const sf::Vector2i WORLD_SIZES;
 World::World(const sf::Vector2i& world_size)
     : world_sizes_(WORLD_SIZES)
 {
-    apple_.Spawn(GetRandomFreeCell());
-    snake_.Spawn(GetRandomFreeCell());
+    apple_.Spawn(FindRandomFreeCell());
+    snake_.Spawn(FindRandomFreeCell());
 
     // number of walls is equal to 4 (up, right, down and left walls)
     walls_.push_back(Wall(
@@ -91,7 +91,7 @@ void World::HandleCollisions()
     if (snake_.CheckSelfCollision())
     {
         snake_.DecreaseLivesNumber();
-        snake_.Spawn(GetRandomFreeCell());
+        snake_.Spawn(FindRandomFreeCell());
     }
 
     for (size_t i = 0; i < walls_.size(); i++)
@@ -99,13 +99,13 @@ void World::HandleCollisions()
         if (walls_[i].CheckIsCellInWall(snake_.GetHeadPosition()))
         {
             snake_.DecreaseLivesNumber();
-            snake_.Spawn(GetRandomFreeCell());
+            snake_.Spawn(FindRandomFreeCell());
         }
     }
 
     if (snake_.GetHeadPosition() == apple_.GetPosition())
     {
-        apple_.Spawn(GetRandomFreeCell());
+        apple_.Spawn(FindRandomFreeCell());
         snake_.Grow();
         snake_.IncreaseScore(10);
     }
@@ -119,14 +119,14 @@ sf::Vector2i World::FindRandomFreeCell() const
     {
         bool is_random_cell_collided = false;
         const sf::Vector2i random_cell_position(
-            std::rand() % world_sizes_.x
+            std::rand() % world_sizes_.x,
             std::rand() % world_sizes_.y
         );
 
         // Check possible collisions with walls
         for (size_t i = 0; i < walls_.size(); i++)
         {
-            if (walls_[i].CheckIsPointInWall(random_cell_position))
+            if (walls_[i].CheckIsCellInWall(random_cell_position))
             {
                 is_random_cell_collided = true;
                 break;
