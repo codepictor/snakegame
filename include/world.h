@@ -25,7 +25,7 @@ public:
 
 private:
     void HandleCollisions();
-    //sf::Vector2i GetRandomFreeCell() const;
+    sf::Vector2i FindRandomFreeCell() const;
 
     sf::Vector2i world_sizes_;
 

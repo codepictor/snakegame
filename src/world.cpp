@@ -1,7 +1,5 @@
 #include "world.h"
 
-#include <iostream>
-
 
 
 extern const sf::Vector2i WORLD_SIZES;
@@ -115,8 +113,55 @@ void World::HandleCollisions()
 
 
 
-sf::Vector2i World::GetRandomFreeCell() const
+sf::Vector2i World::FindRandomFreeCell() const
 {
+    while (true)
+    {
+        bool is_random_cell_collided = false;
+        const sf::Vector2i random_cell_position(
+            std::rand() % world_sizes_.x
+            std::rand() % world_sizes_.y
+        );
 
+        // Check possible collisions with walls
+        for (size_t i = 0; i < walls_.size(); i++)
+        {
+            if (walls_[i].CheckIsPointInWall(random_cell_position))
+            {
+                is_random_cell_collided = true;
+                break;
+            }
+        }
+
+        // Check possible collisions with snake
+        if (!is_random_cell_collided)
+        {
+            const std::vector<Snake::Segment>& snake_body = snake_.GetBody();
+            for (size_t i = 0; i < snake_body.size(); i++)
+            {
+                if (snake_body[i].position == random_cell_position)
+                {
+                    is_random_cell_collided = true;
+                    break;
+                }
+            }
+        }
+
+        // Check possible collision with apple
+        if (!is_random_cell_collided)
+        {
+            if (apple_.GetPosition() == random_cell_position)
+            {
+                is_random_cell_collided = true;
+            }
+        }
+
+        if (!is_random_cell_collided)
+        {
+            return random_cell_position;
+        }
+    }
 }
+
+
 

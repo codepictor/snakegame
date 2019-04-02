@@ -1,3 +1,5 @@
+#include <ctime>
+
 #include "game.h"
 
 #include <iostream>
@@ -13,6 +15,7 @@ Game::Game()
     : main_window_("Snake", WORLD_SIZES * BLOCK_SIZE)
     , world_(WORLD_SIZES)
 {
+    std::srand(std::time(nullptr));
 }
 
 

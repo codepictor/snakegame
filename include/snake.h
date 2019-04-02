@@ -37,6 +37,7 @@ public:
     void SetDirection(const Direction new_direction);
 
     sf::Vector2i GetHeadPosition() const;
+    const std::vector<Segment>& GetBody() const;
     int GetSpeed() const;
     int GetLivesNumber() const;
     void DecreaseLivesNumber();

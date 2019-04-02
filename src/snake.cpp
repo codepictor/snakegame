@@ -49,6 +49,13 @@ sf::Vector2i Snake::GetHeadPosition() const
 
 
 
+const std::vector<Snake::Segment>& Snake::GetBody() const
+{
+    return body_;
+}
+
+
+
 int Snake::GetLivesNumber() const
 {
     return lives_;
