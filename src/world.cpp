@@ -108,6 +108,7 @@ void World::HandleCollisions()
         apple_.Spawn(FindRandomFreeCell());
         snake_.Grow();
         snake_.IncreaseScore(10);
+        snake_.IncreaseSpeed(5);
     }
 }
 

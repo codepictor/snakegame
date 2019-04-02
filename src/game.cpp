@@ -5,7 +5,6 @@
 #include <iostream>
 
 
-const int UPDATES_PER_SECOND = 10;
 extern const int BLOCK_SIZE = 20;
 extern const sf::Vector2i WORLD_SIZES(50, 30);
 
@@ -15,6 +14,7 @@ Game::Game()
     : main_window_("Snake", WORLD_SIZES * BLOCK_SIZE)
     , world_(WORLD_SIZES)
 {
+    // for generating random positions of apple and snake
     std::srand(std::time(nullptr));
 }
 
@@ -22,9 +22,9 @@ Game::Game()
 
 void Game::Run()
 {
-    const sf::Time time_per_frame = sf::seconds(
-        1.0f / static_cast<float>(UPDATES_PER_SECOND)
-    );
+    const float updates_per_frame = 60.0f;
+    const sf::Time time_per_frame = sf::seconds(1.0f / updates_per_frame);
+
     sf::Clock clock;
     sf::Time time_since_last_update = sf::Time::Zero;
 
@@ -39,12 +39,12 @@ void Game::Run()
             Update(time_per_frame.asSeconds());
         }
 
+        Render();
+
         if (main_window_.CheckIsClosed())
         {
             return;
         }
-
-        Render();
     }
 }
 

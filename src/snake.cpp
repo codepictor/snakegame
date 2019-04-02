@@ -16,7 +16,7 @@ void Snake::Spawn(const sf::Vector2i& new_position)
     body_.push_back(Segment{new_position});
 
     SetDirection(Direction::None);
-    speed_ = 15;
+    speed_ = 5;
 }
 
 
@@ -35,13 +35,6 @@ void Snake::SetDirection(const Direction new_direction)
 
 
 
-int Snake::GetSpeed() const
-{
-    return speed_;
-}
-
-
-
 sf::Vector2i Snake::GetHeadPosition() const
 {
     return (!body_.empty() ? body_.front().position : sf::Vector2i(-1, -1));
@@ -52,6 +45,20 @@ sf::Vector2i Snake::GetHeadPosition() const
 const std::vector<Snake::Segment>& Snake::GetBody() const
 {
     return body_;
+}
+
+
+
+int Snake::GetSpeed() const
+{
+    return speed_;
+}
+
+
+
+void Snake::IncreaseSpeed(const int delta)
+{
+    speed_ += delta;
 }
 
 
@@ -169,7 +176,13 @@ void Snake::Update(const float dt)
         return;
     }
     
-    Move();
+    time_since_last_move_ += dt;
+    const float move_time = 1.0f / static_cast<float>(speed_);
+    while (time_since_last_move_ >= move_time)
+    {
+        Move();
+        time_since_last_move_ -= move_time;
+    }
 }
 
 

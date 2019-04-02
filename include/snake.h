@@ -38,7 +38,9 @@ public:
 
     sf::Vector2i GetHeadPosition() const;
     const std::vector<Segment>& GetBody() const;
+
     int GetSpeed() const;
+    void IncreaseSpeed(const int delta);
     int GetLivesNumber() const;
     void DecreaseLivesNumber();
     int GetScore() const;
@@ -49,11 +51,12 @@ public:
 
 
 private:
+    float time_since_last_move_ = 0.0f;
     void Move();
 
     std::vector<Segment> body_;
     Direction direction_ = Direction::None;
-    int speed_ = 0;
+    int speed_ = 5;  // cells per second
     int lives_ = 3;
     int score_ = 0;
 };
