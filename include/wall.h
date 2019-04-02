@@ -10,6 +10,8 @@ public:
     Wall(const sf::Vector2i& top_left, const sf::Vector2i& bottom_right);
     virtual ~Wall() = default;
 
+    bool CheckIsPointInWall(const sf::Vector2i& point) const;
+
     void Update(const float dt);
     void Render(sf::RenderWindow& window);
 

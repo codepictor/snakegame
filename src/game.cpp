@@ -19,7 +19,9 @@ Game::Game()
 
 void Game::Run()
 {
-    const sf::Time time_per_frame = sf::seconds(1.0f / UPDATES_PER_SECOND);
+    const sf::Time time_per_frame = sf::seconds(
+        1.0f / static_cast<float>(UPDATES_PER_SECOND)
+    );
     sf::Clock clock;
     sf::Time time_since_last_update = sf::Time::Zero;
 
