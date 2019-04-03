@@ -33,27 +33,33 @@ World::World(const sf::Vector2i& world_size)
 
 
 
-void World::HandleInput()
+void World::HandleInput(const sf::Event& event)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
-        snake_.GetDirection() != Snake::Direction::Down)
+    if (event.type == sf::Event::KeyPressed)
     {
-        snake_.SetDirection(Snake::Direction::Up);
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
-        snake_.GetDirection() != Snake::Direction::Left)
-    {
-        snake_.SetDirection(Snake::Direction::Right);
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
-        snake_.GetDirection() != Snake::Direction::Up)
-    {
-        snake_.SetDirection(Snake::Direction::Down);
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
-        snake_.GetDirection() != Snake::Direction::Right)
-    {
-        snake_.SetDirection(Snake::Direction::Left);
+        if (event.key.code == sf::Keyboard::Up &&
+            snake_.GetDirection() != Snake::Direction::Down)
+        {
+            snake_.SetDirection(Snake::Direction::Up);
+        }
+
+        if (event.key.code == sf::Keyboard::Right &&
+            snake_.GetDirection() != Snake::Direction::Left)
+        {
+            snake_.SetDirection(Snake::Direction::Right);
+        }
+
+        if (event.key.code == sf::Keyboard::Down &&
+            snake_.GetDirection() != Snake::Direction::Up)
+        {
+            snake_.SetDirection(Snake::Direction::Down);
+        }
+
+        if (event.key.code == sf::Keyboard::Left &&
+            snake_.GetDirection() != Snake::Direction::Right)
+        {
+            snake_.SetDirection(Snake::Direction::Left);
+        }
     }
 }
 
@@ -108,7 +114,7 @@ void World::HandleCollisions()
         apple_.Spawn(FindRandomFreeCell());
         snake_.Grow();
         snake_.IncreaseScore(10);
-        snake_.IncreaseSpeed(5);
+        snake_.IncreaseSpeed(1);
     }
 }
 

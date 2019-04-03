@@ -13,8 +13,9 @@ public:
     Window(const std::string& title, const sf::Vector2i& sizes);
     virtual ~Window();
 
-    bool CheckIsClosed() const;
+    bool PollEvent(sf::Event& event);
 
+    void HandleInput(const sf::Event& event);
     void Update();
     void BeginDraw();
     void DrawWorld(World& world);
@@ -24,8 +25,6 @@ public:
 private:
     void Create();
     void Destroy();
-
-    bool is_closed_ = false;
 
     sf::RenderWindow window_;
     std::string default_title_;

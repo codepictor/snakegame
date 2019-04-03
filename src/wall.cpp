@@ -50,4 +50,3 @@ void Wall::Render(sf::RenderWindow& window)
     window.draw(shape_);
 }
 
-

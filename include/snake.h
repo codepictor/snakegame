@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include <SFML/Graphics.hpp>
 
 
@@ -52,11 +54,11 @@ public:
 
 private:
     float time_since_last_move_ = 0.0f;
-    void Move();
+    void MoveByOneCell();
 
     std::vector<Segment> body_;
     Direction direction_ = Direction::None;
-    int speed_ = 5;  // cells per second
+    int speed_ = 0;  // cells per second
     int lives_ = 3;
     int score_ = 0;
 };

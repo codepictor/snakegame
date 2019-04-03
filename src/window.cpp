@@ -4,8 +4,6 @@
 
 Window::Window(const std::string& title, const sf::Vector2i& sizes)
 {
-    is_closed_ = false;
-
     default_title_ = title;
     default_sizes_ = sizes;
 
@@ -21,23 +19,25 @@ Window::~Window()
 
 
 
-bool Window::CheckIsClosed() const
+bool Window::PollEvent(sf::Event& event)
 {
-    return is_closed_;
+    return window_.pollEvent(event);
+}
+
+
+
+void Window::HandleInput(const sf::Event& event)
+{
+    if (event.type == sf::Event::Closed)
+    {
+        window_.close();
+    }
 }
 
 
 
 void Window::Update()
-{
-    sf::Event event;
-    while (window_.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-        {
-            is_closed_ = true;
-        }
-    }
+{   
 }
 
 

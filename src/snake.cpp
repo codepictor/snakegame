@@ -15,15 +15,39 @@ void Snake::Spawn(const sf::Vector2i& new_position)
     body_.clear();
     body_.push_back(Segment{new_position});
 
-    SetDirection(Direction::None);
-    speed_ = 5;
+    direction_ = Direction::None;
+    speed_ = 3;
 }
 
 
 
 Snake::Direction Snake::GetDirection() const
 {
-    return direction_;
+    if (body_.size() <= 1)
+    {
+        return direction_;
+    }
+
+    assert(body_.size() >= 2);
+    const Segment& head = body_[0];
+    const Segment& after_head = body_[1];
+    assert(head.position.x == after_head.position.x ||
+        head.position.y == after_head.position.y);
+
+    if (head.position.x == after_head.position.x)
+    {
+        assert(abs(head.position.y - after_head.position.y) == 1);
+        return (head.position.y > after_head.position.y) ?
+            Direction::Down : Direction::Up;
+    }
+    else
+    {
+        assert(abs(head.position.x - after_head.position.x) == 1);
+        return (head.position.x > after_head.position.x) ?
+            Direction::Right : Direction::Left;
+    }
+
+    return Direction::None;
 }
 
 
@@ -94,10 +118,6 @@ void Snake::IncreaseScore(const int delta)
 void Snake::Grow()
 {
     assert(!body_.empty());
-    if (body_.empty())
-    {
-        return;
-    }
 
     Segment new_segment = {sf::Vector2i(0, 0)};
     if (body_.size() == 1)
@@ -171,30 +191,32 @@ void Snake::Grow()
 
 void Snake::Update(const float dt)
 {
-    if (body_.empty() || direction_ == Direction::None)
-    {
-        return;
-    }
+    assert(!body_.empty());
     
     time_since_last_move_ += dt;
     const float move_time = 1.0f / static_cast<float>(speed_);
     while (time_since_last_move_ >= move_time)
     {
-        Move();
+        if (direction_ != Direction::None)
+        {
+            MoveByOneCell();
+        }
         time_since_last_move_ -= move_time;
     }
 }
 
 
 
-void Snake::Move()
+void Snake::MoveByOneCell()
 {
-    if (body_.size() == 0)
+    assert(!body_.empty());
+
+    if (direction_ == Direction::None)
     {
         return;
     }
 
-    for (int i = body_.size() - 1; i > 0; i--)
+    for (size_t i = body_.size() - 1; i > 0; i--)
     {
         body_[i].position = body_[i - 1].position;
     }
@@ -251,12 +273,12 @@ void Snake::Render(sf::RenderWindow& window)
     Segment& head = body_.front();
     head.shape.setFillColor(sf::Color::Yellow);
     head.shape.setPosition(
-        head.position.x * BLOCK_SIZE,
-        head.position.y * BLOCK_SIZE
+        static_cast<float>(head.position.x * BLOCK_SIZE),
+        static_cast<float>(head.position.y * BLOCK_SIZE)
     );
     head.shape.setSize(sf::Vector2f(
-        BLOCK_SIZE - 1,
-        BLOCK_SIZE - 1
+        static_cast<float>(BLOCK_SIZE - 1),
+        static_cast<float>(BLOCK_SIZE - 1)
     ));
     window.draw(head.shape);
 
@@ -264,12 +286,12 @@ void Snake::Render(sf::RenderWindow& window)
     {
         body_[i].shape.setFillColor(sf::Color::Green);
         body_[i].shape.setPosition(
-            body_[i].position.x * BLOCK_SIZE,
-            body_[i].position.y * BLOCK_SIZE
+            static_cast<float>(body_[i].position.x * BLOCK_SIZE),
+            static_cast<float>(body_[i].position.y * BLOCK_SIZE)
         );
         body_[i].shape.setSize(sf::Vector2f(
-            BLOCK_SIZE - 1,
-            BLOCK_SIZE - 1
+            static_cast<float>(BLOCK_SIZE - 1),
+            static_cast<float>(BLOCK_SIZE - 1)
         ));
         window.draw(body_[i].shape);
     }

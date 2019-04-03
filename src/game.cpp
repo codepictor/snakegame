@@ -15,7 +15,7 @@ Game::Game()
     , world_(WORLD_SIZES)
 {
     // for generating random positions of apple and snake
-    std::srand(std::time(nullptr));
+    std::srand(static_cast<float>(std::time(nullptr)));
 }
 
 
@@ -41,7 +41,7 @@ void Game::Run()
 
         Render();
 
-        if (main_window_.CheckIsClosed())
+        if (is_finished_)
         {
             return;
         }
@@ -52,7 +52,26 @@ void Game::Run()
 
 void Game::HandleInput()
 {
-    world_.HandleInput();
+    sf::Event event;
+    while (main_window_.PollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+        {
+            main_window_.HandleInput(event);
+            is_finished_ = true;
+        }
+
+        if (event.type == sf::Event::KeyPressed)
+        {
+            if (event.key.code == sf::Keyboard::Up ||
+                event.key.code == sf::Keyboard::Right ||
+                event.key.code == sf::Keyboard::Down ||
+                event.key.code == sf::Keyboard::Left)
+            {
+                world_.HandleInput(event);
+            }
+        }
+    }
 }
 
 
