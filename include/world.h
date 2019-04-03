@@ -18,7 +18,6 @@ public:
     explicit World(const sf::Vector2i& window_sizes);
     virtual ~World() = default;
 
-    void HandleInput(const sf::Event& event);
     void Update(const float dt);
     void Render(sf::RenderWindow& window);
 

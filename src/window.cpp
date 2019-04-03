@@ -19,25 +19,24 @@ Window::~Window()
 
 
 
-bool Window::PollEvent(sf::Event& event)
+bool Window::CheckIsClosed() const
 {
-    return window_.pollEvent(event);
-}
-
-
-
-void Window::HandleInput(const sf::Event& event)
-{
-    if (event.type == sf::Event::Closed)
-    {
-        window_.close();
-    }
+    return is_closed_;
 }
 
 
 
 void Window::Update()
-{   
+{
+    sf::Event event;
+    while (window_.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+        {
+            window_.close();
+            is_closed_ = true;
+        }
+    }
 }
 
 

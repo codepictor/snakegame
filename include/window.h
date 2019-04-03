@@ -13,9 +13,8 @@ public:
     Window(const std::string& title, const sf::Vector2i& sizes);
     virtual ~Window();
 
-    bool PollEvent(sf::Event& event);
+    bool CheckIsClosed() const;
 
-    void HandleInput(const sf::Event& event);
     void Update();
     void BeginDraw();
     void DrawWorld(World& world);
@@ -29,5 +28,6 @@ private:
     sf::RenderWindow window_;
     std::string default_title_;
     sf::Vector2i default_sizes_;
+    bool is_closed_ = false;
 };
 

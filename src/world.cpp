@@ -33,38 +33,6 @@ World::World(const sf::Vector2i& world_size)
 
 
 
-void World::HandleInput(const sf::Event& event)
-{
-    if (event.type == sf::Event::KeyPressed)
-    {
-        if (event.key.code == sf::Keyboard::Up &&
-            snake_.GetDirection() != Snake::Direction::Down)
-        {
-            snake_.SetDirection(Snake::Direction::Up);
-        }
-
-        if (event.key.code == sf::Keyboard::Right &&
-            snake_.GetDirection() != Snake::Direction::Left)
-        {
-            snake_.SetDirection(Snake::Direction::Right);
-        }
-
-        if (event.key.code == sf::Keyboard::Down &&
-            snake_.GetDirection() != Snake::Direction::Up)
-        {
-            snake_.SetDirection(Snake::Direction::Down);
-        }
-
-        if (event.key.code == sf::Keyboard::Left &&
-            snake_.GetDirection() != Snake::Direction::Right)
-        {
-            snake_.SetDirection(Snake::Direction::Left);
-        }
-    }
-}
-
-
-
 void World::Update(const float dt)
 {
     HandleCollisions();

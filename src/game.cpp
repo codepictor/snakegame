@@ -2,7 +2,6 @@
 
 #include "game.h"
 
-#include <iostream>
 
 
 extern const int BLOCK_SIZE = 20;
@@ -15,7 +14,7 @@ Game::Game()
     , world_(WORLD_SIZES)
 {
     // for generating random positions of apple and snake
-    std::srand(static_cast<float>(std::time(nullptr)));
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 
@@ -41,7 +40,7 @@ void Game::Run()
 
         Render();
 
-        if (is_finished_)
+        if (main_window_.CheckIsClosed())
         {
             return;
         }
@@ -52,25 +51,28 @@ void Game::Run()
 
 void Game::HandleInput()
 {
-    sf::Event event;
-    while (main_window_.PollEvent(event))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
+        world_.snake_.GetDirection() != Snake::Direction::Down)
     {
-        if (event.type == sf::Event::Closed)
-        {
-            main_window_.HandleInput(event);
-            is_finished_ = true;
-        }
+        world_.snake_.SetDirection(Snake::Direction::Up);
+    }
 
-        if (event.type == sf::Event::KeyPressed)
-        {
-            if (event.key.code == sf::Keyboard::Up ||
-                event.key.code == sf::Keyboard::Right ||
-                event.key.code == sf::Keyboard::Down ||
-                event.key.code == sf::Keyboard::Left)
-            {
-                world_.HandleInput(event);
-            }
-        }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
+        world_.snake_.GetDirection() != Snake::Direction::Left)
+    {
+        world_.snake_.SetDirection(Snake::Direction::Right);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+        world_.snake_.GetDirection() != Snake::Direction::Up)
+    {
+        world_.snake_.SetDirection(Snake::Direction::Down);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
+        world_.snake_.GetDirection() != Snake::Direction::Right)
+    {
+        world_.snake_.SetDirection(Snake::Direction::Left);
     }
 }
 

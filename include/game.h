@@ -22,7 +22,5 @@ private:
     Window main_window_;
 
     World world_;
-
-    bool is_finished_ = false;
 };
 
