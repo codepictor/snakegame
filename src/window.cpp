@@ -31,11 +31,7 @@ void Window::Update()
     sf::Event event;
     while (window_.pollEvent(event))
     {
-        if (event.type == sf::Event::Closed)
-        {
-            window_.close();
-            is_closed_ = true;
-        }
+        event_manager_.HandleEvent(event);
     }
 }
 
@@ -69,13 +65,22 @@ void Window::Create()
         default_title_,
         sf::Style::Titlebar | sf::Style::Close
     );
+
+    event_manager_.Subscribe(
+        sf::Event::Closed,  // type of event
+        std::bind(&Window::Destroy, this)  // callback
+    );
 }
 
 
 
 void Window::Destroy()
 {
-    window_.close();
+    if (!is_closed_)
+    {
+        window_.close();
+        is_closed_ = true;
+    }
 }
 
 

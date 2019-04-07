@@ -30,8 +30,8 @@ void Apple::Render(sf::RenderWindow& window)
 {
     shape_.setRadius(static_cast<float>(BLOCK_SIZE) / 2.0f);
     shape_.setPosition(sf::Vector2f(
-        position_.x * BLOCK_SIZE,
-        position_.y * BLOCK_SIZE
+        static_cast<float>(position_.x * BLOCK_SIZE),
+        static_cast<float>(position_.y * BLOCK_SIZE)
     ));
 
     shape_.setFillColor(sf::Color::Red);

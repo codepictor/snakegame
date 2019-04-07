@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "world.h"
+#include "event_manager.h"
 
 
 
@@ -29,5 +30,7 @@ private:
     std::string default_title_;
     sf::Vector2i default_sizes_;
     bool is_closed_ = false;
+
+    EventManager event_manager_;
 };
 
