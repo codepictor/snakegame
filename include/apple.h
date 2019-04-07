@@ -4,16 +4,21 @@
 
 
 
+class EventManager;
+
+
+
 class Apple
 {
 public:
-    Apple() = default;
+    explicit Apple(EventManager& event_manager);
     virtual ~Apple() = default;
 
     sf::Vector2i GetPosition() const;
 
     void Spawn(const sf::Vector2i& new_position);
 
+    void HandleEvent(const sf::Event& event);
     void Update(const float dt);
     void Render(sf::RenderWindow& window);
 

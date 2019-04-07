@@ -1,8 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <queue>
 
 #include <SFML/Graphics.hpp>
+
+
+
+class EventManager;
 
 
 
@@ -28,16 +33,13 @@ public:
 
 
 public:
-    Snake() = default;
+    explicit Snake(EventManager& event_manager);
     virtual ~Snake() = default;
 
     void Spawn(const sf::Vector2i& new_position);
     void Grow();
     bool CheckSelfCollision() const;
     
-    Direction GetDirection() const;
-    void SetDirection(const Direction new_direction);
-
     sf::Vector2i GetHeadPosition() const;
     const std::vector<Segment>& GetBody() const;
 
@@ -48,11 +50,15 @@ public:
     int GetScore() const;
     void IncreaseScore(const int delta);
     
+    void HandleEvent(const sf::Event& event);
     void Update(const float dt);
     void Render(sf::RenderWindow& window);
 
 
 private:
+    std::queue<Direction> new_directions_;
+    void SetNewDirection();
+
     float time_since_last_move_ = 0.0f;
     void MoveByOneCell();
 

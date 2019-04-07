@@ -3,10 +3,25 @@
 #include <cassert>
 
 #include "snake.h"
+#include "event_manager.h"
 
 
 
 extern const int BLOCK_SIZE;
+
+
+
+Snake::Snake(EventManager& event_manager)
+{
+    std::function<void(const sf::Event&)> callback = std::bind(
+        &Snake::HandleEvent, this,
+        std::placeholders::_1
+    );
+    event_manager.Subscribe(
+        sf::Event::KeyPressed,
+        callback
+    );
+}
 
 
 
@@ -16,45 +31,7 @@ void Snake::Spawn(const sf::Vector2i& new_position)
     body_.push_back(Segment{new_position});
 
     direction_ = Direction::None;
-    speed_ = 3;
-}
-
-
-
-Snake::Direction Snake::GetDirection() const
-{
-    if (body_.size() <= 1)
-    {
-        return direction_;
-    }
-
-    assert(body_.size() >= 2);
-    const Segment& head = body_[0];
-    const Segment& after_head = body_[1];
-    assert(head.position.x == after_head.position.x ||
-        head.position.y == after_head.position.y);
-
-    if (head.position.x == after_head.position.x)
-    {
-        assert(abs(head.position.y - after_head.position.y) == 1);
-        return (head.position.y > after_head.position.y) ?
-            Direction::Down : Direction::Up;
-    }
-    else
-    {
-        assert(abs(head.position.x - after_head.position.x) == 1);
-        return (head.position.x > after_head.position.x) ?
-            Direction::Right : Direction::Left;
-    }
-
-    return Direction::None;
-}
-
-
-
-void Snake::SetDirection(const Direction new_direction)
-{
-    direction_ = new_direction;
+    speed_ = 30;
 }
 
 
@@ -189,6 +166,34 @@ void Snake::Grow()
 
 
 
+void Snake::HandleEvent(const sf::Event& event)
+{
+    assert(event.type == sf::Event::KeyPressed);
+
+    switch (event.key.code)
+    {
+        case sf::Keyboard::Up:
+            new_directions_.push(Direction::Up);
+            break;
+
+        case sf::Keyboard::Right:
+            new_directions_.push(Direction::Right);
+            break;
+
+        case sf::Keyboard::Down:
+            new_directions_.push(Direction::Down);
+            break;
+
+        case sf::Keyboard::Left:
+            new_directions_.push(Direction::Left);
+            break;
+
+        default:;
+    }
+}
+
+
+
 void Snake::Update(const float dt)
 {
     assert(!body_.empty());
@@ -197,6 +202,7 @@ void Snake::Update(const float dt)
     const float move_time = 1.0f / static_cast<float>(speed_);
     while (time_since_last_move_ >= move_time)
     {
+        SetNewDirection();
         if (direction_ != Direction::None)
         {
             MoveByOneCell();
@@ -207,11 +213,49 @@ void Snake::Update(const float dt)
 
 
 
+void Snake::SetNewDirection()
+{
+    while (!new_directions_.empty())
+    {
+        const Direction trial_new_direction = new_directions_.front();
+        new_directions_.pop();
+
+        if (trial_new_direction == Direction::Up &&
+            direction_ != Direction::Up && direction_ != Direction::Down)
+        {
+            direction_ = Direction::Up;
+            break;
+        }
+
+        if (trial_new_direction == Direction::Right &&
+            direction_ != Direction::Right && direction_ != Direction::Left)
+        {
+            direction_ = Direction::Right;
+            break;
+        }
+
+        if (trial_new_direction == Direction::Down &&
+            direction_ != Direction::Down && direction_ != Direction::Up)
+        {
+            direction_ = Direction::Down;
+            break;
+        }
+
+        if (trial_new_direction == Direction::Left &&
+            direction_ != Direction::Left && direction_ != Direction::Right)
+        {
+            direction_ = Direction::Left;
+            break;
+        }
+    }
+}
+
+
+
 void Snake::MoveByOneCell()
 {
     assert(!body_.empty());
-
-    if (direction_ == Direction::None)
+    if (direction_ == Direction::None || body_.empty())
     {
         return;
     }
@@ -221,7 +265,7 @@ void Snake::MoveByOneCell()
         body_[i].position = body_[i - 1].position;
     }
 
-    Snake::Segment& head = body_.front();
+    Segment& head = body_.front();
     switch (direction_)
     {
         case Direction::Up:
