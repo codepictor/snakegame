@@ -6,6 +6,10 @@
 
 
 
+class EventManager;
+
+
+
 class Snake
 {
 public:
@@ -28,7 +32,7 @@ public:
 
 
 public:
-    Snake() = default;
+    explicit Snake(EventManager& event_manager);
     virtual ~Snake() = default;
 
     void Spawn(const sf::Vector2i& new_position);
@@ -48,6 +52,7 @@ public:
     int GetScore() const;
     void IncreaseScore(const int delta);
     
+    void HandleEvent(const sf::Event& event);
     void Update(const float dt);
     void Render(sf::RenderWindow& window);
 

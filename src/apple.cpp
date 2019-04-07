@@ -1,8 +1,15 @@
 #include "apple.h"
+#include "event_manager.h"
 
 
 
 extern const int BLOCK_SIZE;
+
+
+
+Apple::Apple(EventManager& event_manager)
+{
+}
 
 
 
@@ -16,6 +23,12 @@ sf::Vector2i Apple::GetPosition() const
 void Apple::Spawn(const sf::Vector2i& new_position)
 {
     position_ = new_position;
+}
+
+
+
+void Apple::HandleEvent(const sf::Event& event)
+{
 }
 
 

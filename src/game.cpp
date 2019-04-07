@@ -11,7 +11,7 @@ extern const sf::Vector2i WORLD_SIZES(50, 30);
 
 Game::Game()
     : main_window_("Snake", WORLD_SIZES * BLOCK_SIZE)
-    , world_(WORLD_SIZES)
+    , world_(WORLD_SIZES, main_window_.GetEventManager())
 {
     // for generating random positions of apple and snake
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -51,29 +51,6 @@ void Game::Run()
 
 void Game::HandleInput()
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
-        world_.snake_.GetDirection() != Snake::Direction::Down)
-    {
-        world_.snake_.SetDirection(Snake::Direction::Up);
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
-        world_.snake_.GetDirection() != Snake::Direction::Left)
-    {
-        world_.snake_.SetDirection(Snake::Direction::Right);
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
-        world_.snake_.GetDirection() != Snake::Direction::Up)
-    {
-        world_.snake_.SetDirection(Snake::Direction::Down);
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
-        world_.snake_.GetDirection() != Snake::Direction::Right)
-    {
-        world_.snake_.SetDirection(Snake::Direction::Left);
-    }
 }
 
 

@@ -19,9 +19,26 @@ Window::~Window()
 
 
 
+EventManager& Window::GetEventManager()
+{
+    return event_manager_;
+}
+
+
+
 bool Window::CheckIsClosed() const
 {
     return is_closed_;
+}
+
+
+
+void Window::HandleEvent(const sf::Event& event)
+{
+    if (event.type == sf::Event::Closed)
+    {
+        Destroy();
+    }
 }
 
 
@@ -66,9 +83,13 @@ void Window::Create()
         sf::Style::Titlebar | sf::Style::Close
     );
 
+    std::function<void(const sf::Event&)> callback = std::bind(
+        &Window::HandleEvent, this,
+        std::placeholders::_1
+    );
     event_manager_.Subscribe(
-        sf::Event::Closed,  // type of event
-        std::bind(&Window::Destroy, this)  // callback
+        sf::Event::Closed,
+        callback
     );
 }
 
@@ -82,5 +103,4 @@ void Window::Destroy()
         is_closed_ = true;
     }
 }
-
 

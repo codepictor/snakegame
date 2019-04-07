@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include <SFML/Graphics.hpp>
 
 #include "world.h"
@@ -14,8 +15,11 @@ public:
     Window(const std::string& title, const sf::Vector2i& sizes);
     virtual ~Window();
 
+    EventManager& GetEventManager();
+
     bool CheckIsClosed() const;
 
+    void HandleEvent(const sf::Event& event);
     void Update();
     void BeginDraw();
     void DrawWorld(World& world);

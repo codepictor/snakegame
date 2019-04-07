@@ -6,8 +6,10 @@ extern const sf::Vector2i WORLD_SIZES;
 
 
 
-World::World(const sf::Vector2i& world_size)
+World::World(const sf::Vector2i& world_size, EventManager& event_manager)
     : world_sizes_(WORLD_SIZES)
+    , snake_(event_manager)
+    , apple_(event_manager)
 {
     apple_.Spawn(FindRandomFreeCell());
     snake_.Spawn(FindRandomFreeCell());

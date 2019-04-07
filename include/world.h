@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "event_manager.h"
 #include "snake.h"
 #include "apple.h"
 #include "wall.h"
@@ -15,7 +16,7 @@ class World
     friend class Game;
 
 public:
-    explicit World(const sf::Vector2i& window_sizes);
+    World(const sf::Vector2i& window_sizes, EventManager& event_manager);
     virtual ~World() = default;
 
     void Update(const float dt);

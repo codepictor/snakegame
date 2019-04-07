@@ -34,7 +34,6 @@ void EventManager::HandleEvent(const sf::Event& event)
 
     for (const Subscriber& subscriber : subscribers_.at(event.type))
     {
-        //std::cerr << "Calling callback" << std::endl;
         subscriber.callback(event);
     }
 }

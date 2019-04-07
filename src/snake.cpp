@@ -3,10 +3,25 @@
 #include <cassert>
 
 #include "snake.h"
+#include "event_manager.h"
 
 
 
 extern const int BLOCK_SIZE;
+
+
+
+Snake::Snake(EventManager& event_manager)
+{
+    std::function<void(const sf::Event&)> callback = std::bind(
+        &Snake::HandleEvent, this,
+        std::placeholders::_1
+    );
+    event_manager.Subscribe(
+        sf::Event::KeyPressed,
+        callback
+    );
+}
 
 
 
@@ -185,6 +200,37 @@ void Snake::Grow()
     }
 
     body_.push_back(std::move(new_segment));
+}
+
+
+
+void Snake::HandleEvent(const sf::Event& event)
+{
+    assert(event.type == sf::Event::KeyPressed);
+
+    if (event.key.code == sf::Keyboard::Up &&
+        GetDirection() != Snake::Direction::Down)
+    {
+        SetDirection(Snake::Direction::Up);
+    }
+
+    if (event.key.code == sf::Keyboard::Right &&
+        GetDirection() != Snake::Direction::Left)
+    {
+        SetDirection(Snake::Direction::Right);
+    }
+
+    if (event.key.code == sf::Keyboard::Down &&
+        GetDirection() != Snake::Direction::Up)
+    {
+        SetDirection(Snake::Direction::Down);
+    }
+
+    if (event.key.code == sf::Keyboard::Left &&
+        GetDirection() != Snake::Direction::Right)
+    {
+        SetDirection(Snake::Direction::Left);
+    }
 }
 
 
