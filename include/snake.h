@@ -40,7 +40,6 @@ public:
     void Grow();
     bool CheckSelfCollision() const;
     
-    Direction GetDirection() const;
     sf::Vector2i GetHeadPosition() const;
     const std::vector<Segment>& GetBody() const;
 

@@ -18,8 +18,27 @@ EventManager::SubscriberID EventManager::Subscribe(
 
 
 
-bool EventManager::Unsubscribe(const SubscriberID subscriber_id)
+bool EventManager::Unsubscribe(
+    const sf::Event::EventType event_type,
+    const SubscriberID subscriber_id)
 {
+    if (subscribers_.count(event_type) == 0)
+    {
+        return false;
+    }
+
+    std::vector<Subscriber>& event_subscribers = subscribers_.at(event_type);
+    for (auto it = event_subscribers.begin();
+        it != event_subscribers.end();
+        it++)
+    {
+        if (it->subscriber_id == subscriber_id)
+        {
+            event_subscribers.erase(it);
+            return true;
+        }
+    }
+
     return false;
 }
 

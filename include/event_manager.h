@@ -20,7 +20,10 @@ public:
         const sf::Event::EventType event_type,
         std::function<void(const sf::Event&)> callback
     );
-    bool Unsubscribe(const SubscriberID subscriber_id);
+    bool Unsubscribe(
+        const sf::Event::EventType event_type,
+        const SubscriberID subscriber_id
+    );
 
     void HandleEvent(const sf::Event& event);
     void Update() const;

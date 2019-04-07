@@ -31,38 +31,7 @@ void Snake::Spawn(const sf::Vector2i& new_position)
     body_.push_back(Segment{new_position});
 
     direction_ = Direction::None;
-    speed_ = 3;
-}
-
-
-
-Snake::Direction Snake::GetDirection() const
-{
-    if (body_.size() <= 1)
-    {
-        return direction_;
-    }
-
-    assert(body_.size() >= 2);
-    const Segment& head = body_[0];
-    const Segment& after_head = body_[1];
-    assert(head.position.x == after_head.position.x ||
-        head.position.y == after_head.position.y);
-
-    if (head.position.x == after_head.position.x)
-    {
-        assert(abs(head.position.y - after_head.position.y) == 1);
-        return (head.position.y > after_head.position.y) ?
-            Direction::Down : Direction::Up;
-    }
-    else
-    {
-        assert(abs(head.position.x - after_head.position.x) == 1);
-        return (head.position.x > after_head.position.x) ?
-            Direction::Right : Direction::Left;
-    }
-
-    return Direction::None;
+    speed_ = 30;
 }
 
 
