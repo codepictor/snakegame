@@ -67,13 +67,6 @@ Snake::Direction Snake::GetDirection() const
 
 
 
-void Snake::SetDirection(const Direction new_direction)
-{
-    direction_ = new_direction;
-}
-
-
-
 sf::Vector2i Snake::GetHeadPosition() const
 {
     return (!body_.empty() ? body_.front().position : sf::Vector2i(-1, -1));
@@ -208,28 +201,25 @@ void Snake::HandleEvent(const sf::Event& event)
 {
     assert(event.type == sf::Event::KeyPressed);
 
-    if (event.key.code == sf::Keyboard::Up &&
-        GetDirection() != Snake::Direction::Down)
+    switch (event.key.code)
     {
-        SetDirection(Snake::Direction::Up);
-    }
+        case sf::Keyboard::Up:
+            new_directions_.push(Direction::Up);
+            break;
 
-    if (event.key.code == sf::Keyboard::Right &&
-        GetDirection() != Snake::Direction::Left)
-    {
-        SetDirection(Snake::Direction::Right);
-    }
+        case sf::Keyboard::Right:
+            new_directions_.push(Direction::Right);
+            break;
 
-    if (event.key.code == sf::Keyboard::Down &&
-        GetDirection() != Snake::Direction::Up)
-    {
-        SetDirection(Snake::Direction::Down);
-    }
+        case sf::Keyboard::Down:
+            new_directions_.push(Direction::Down);
+            break;
 
-    if (event.key.code == sf::Keyboard::Left &&
-        GetDirection() != Snake::Direction::Right)
-    {
-        SetDirection(Snake::Direction::Left);
+        case sf::Keyboard::Left:
+            new_directions_.push(Direction::Left);
+            break;
+
+        default:;
     }
 }
 
@@ -243,6 +233,7 @@ void Snake::Update(const float dt)
     const float move_time = 1.0f / static_cast<float>(speed_);
     while (time_since_last_move_ >= move_time)
     {
+        SetNewDirection();
         if (direction_ != Direction::None)
         {
             MoveByOneCell();
@@ -253,11 +244,49 @@ void Snake::Update(const float dt)
 
 
 
+void Snake::SetNewDirection()
+{
+    while (!new_directions_.empty())
+    {
+        const Direction trial_new_direction = new_directions_.front();
+        new_directions_.pop();
+
+        if (trial_new_direction == Direction::Up &&
+            direction_ != Direction::Up && direction_ != Direction::Down)
+        {
+            direction_ = Direction::Up;
+            break;
+        }
+
+        if (trial_new_direction == Direction::Right &&
+            direction_ != Direction::Right && direction_ != Direction::Left)
+        {
+            direction_ = Direction::Right;
+            break;
+        }
+
+        if (trial_new_direction == Direction::Down &&
+            direction_ != Direction::Down && direction_ != Direction::Up)
+        {
+            direction_ = Direction::Down;
+            break;
+        }
+
+        if (trial_new_direction == Direction::Left &&
+            direction_ != Direction::Left && direction_ != Direction::Right)
+        {
+            direction_ = Direction::Left;
+            break;
+        }
+    }
+}
+
+
+
 void Snake::MoveByOneCell()
 {
     assert(!body_.empty());
-
-    if (direction_ == Direction::None)
+    if (direction_ == Direction::None || body_.empty())
     {
         return;
     }
@@ -267,7 +296,7 @@ void Snake::MoveByOneCell()
         body_[i].position = body_[i - 1].position;
     }
 
-    Snake::Segment& head = body_.front();
+    Segment& head = body_.front();
     switch (direction_)
     {
         case Direction::Up:

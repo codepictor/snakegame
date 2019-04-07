@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <queue>
 
 #include <SFML/Graphics.hpp>
 
@@ -40,8 +41,6 @@ public:
     bool CheckSelfCollision() const;
     
     Direction GetDirection() const;
-    void SetDirection(const Direction new_direction);
-
     sf::Vector2i GetHeadPosition() const;
     const std::vector<Segment>& GetBody() const;
 
@@ -58,6 +57,9 @@ public:
 
 
 private:
+    std::queue<Direction> new_directions_;
+    void SetNewDirection();
+
     float time_since_last_move_ = 0.0f;
     void MoveByOneCell();
 
