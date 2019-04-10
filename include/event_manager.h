@@ -14,15 +14,15 @@ public:
     EventManager() = default;
     virtual ~EventManager() = default;
 
-    using SubscriberID = int;
+    using SubscriptionID = int;
 
-    SubscriberID Subscribe(
+    SubscriptionID Subscribe(
         const sf::Event::EventType event_type,
         std::function<void(const sf::Event&)> callback
     );
     bool Unsubscribe(
         const sf::Event::EventType event_type,
-        const SubscriberID subscriber_id
+        const SubscriptionID subscription_id
     );
 
     void HandleEvent(const sf::Event& event);
@@ -30,16 +30,16 @@ public:
 
 
 private:
-    struct Subscriber
+    struct Subscription
     {
-        SubscriberID subscriber_id;
+        SubscriptionID id;
         std::function<void(const sf::Event&)> callback;
     };
 
-    SubscriberID next_subscriber_id_ = 0;
+    SubscriptionID next_subscription_id_ = 0;
 
     std::unordered_map<
-        sf::Event::EventType, std::vector<Subscriber>
-    > subscribers_;
+        sf::Event::EventType, std::vector<Subscription>
+    > subscriptions_;
 };
 

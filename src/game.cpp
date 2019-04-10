@@ -4,14 +4,23 @@
 
 
 
-extern const int BLOCK_SIZE = 20;
-extern const sf::Vector2i WORLD_SIZES(50, 30);
+extern const int BLOCK_SIZE = 18;  // in pixels
+extern const sf::Vector2i WORLD_SIZES(50, 27);  // in blocks
+extern const sf::Vector2i MESSAGE_BOX_SIZES(WORLD_SIZES.x * BLOCK_SIZE, 80);  // in pixels
 
 
 
 Game::Game()
-    : main_window_("Snake", WORLD_SIZES * BLOCK_SIZE)
+    : main_window_(
+        "Snake",
+        WORLD_SIZES * BLOCK_SIZE + sf::Vector2i(0, MESSAGE_BOX_SIZES.y)
+    )
     , world_(WORLD_SIZES, main_window_.GetEventManager())
+    , message_box_(
+        sf::Vector2i(0, WORLD_SIZES.y * BLOCK_SIZE),  // position (in pixels)
+        MESSAGE_BOX_SIZES,  // sizes (in pixels)
+        8  // char_size
+    )
 {
     // for generating random positions of apple and snake
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -65,6 +74,7 @@ void Game::Update(const float dt)
 
     main_window_.Update();
     world_.Update(dt);
+    message_box_.Update();
 }
 
 
@@ -74,6 +84,7 @@ void Game::Render()
     main_window_.BeginDraw();
 
     main_window_.DrawWorld(world_);
+    main_window_.DrawMessageBox(message_box_);
 
     main_window_.EndDraw();
 }

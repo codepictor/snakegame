@@ -4,8 +4,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "world.h"
 #include "event_manager.h"
+
+
+class World;
+class MessageBox;
 
 
 
@@ -23,6 +26,7 @@ public:
     void Update();
     void BeginDraw();
     void DrawWorld(World& world);
+    void DrawMessageBox(MessageBox& message_box);
     void EndDraw();
     
 

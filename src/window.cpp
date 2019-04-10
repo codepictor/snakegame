@@ -1,4 +1,6 @@
 #include "window.h"
+#include "world.h"
+#include "message_box.h"
 
 
 
@@ -64,6 +66,13 @@ void Window::BeginDraw()
 void Window::DrawWorld(World& world)
 {
     world.Render(window_);
+}
+
+
+
+void Window::DrawMessageBox(MessageBox& message_box)
+{
+    message_box.Render(window_);
 }
 
 

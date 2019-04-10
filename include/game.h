@@ -2,6 +2,7 @@
 
 #include "window.h"
 #include "world.h"
+#include "message_box.h"
 
 
 
@@ -22,5 +23,7 @@ private:
     Window main_window_;
 
     World world_;
+
+    MessageBox message_box_;
 };
 
