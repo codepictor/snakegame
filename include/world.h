@@ -19,15 +19,28 @@ public:
     World(const sf::Vector2i& window_sizes, EventManager& event_manager);
     virtual ~World() = default;
 
+    enum class Event
+    {
+        CollisionWithWall,
+        CollisionWithSnake,
+        CollisionWithApple
+    };
+
+    void Create();
+
     void Update(const float dt);
     void Render(sf::RenderWindow& window);
 
 
 private:
+    void AddNewEvent(const Event event_type);
+
     void HandleCollisions();
     sf::Vector2i FindRandomFreeCell() const;
 
     sf::Vector2i world_sizes_;
+
+    std::vector<Event> events_;
 
     Snake snake_;
     Apple apple_;

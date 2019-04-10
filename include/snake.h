@@ -36,6 +36,7 @@ public:
     explicit Snake(EventManager& event_manager);
     virtual ~Snake() = default;
 
+    void Create(const sf::Vector2i& new_position);
     void Spawn(const sf::Vector2i& new_position);
     void Grow();
     bool CheckSelfCollision() const;
@@ -64,8 +65,8 @@ private:
 
     std::vector<Segment> body_;
     Direction direction_ = Direction::None;
-    int speed_ = 0;  // cells per second
-    int lives_ = 3;
-    int score_ = 0;
+    int speed_;  // cells per second
+    int lives_;
+    int score_;
 };
 

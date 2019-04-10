@@ -20,6 +20,8 @@ public:
 
 
 private:
+    void HandleWorldEvents();
+
     Window main_window_;
 
     World world_;

@@ -13,9 +13,9 @@ Apple::Apple(EventManager& event_manager)
 
 
 
-sf::Vector2i Apple::GetPosition() const
+void Apple::Create(const sf::Vector2i& new_position)
 {
-    return position_;
+    Spawn(new_position);
 }
 
 
@@ -23,6 +23,13 @@ sf::Vector2i Apple::GetPosition() const
 void Apple::Spawn(const sf::Vector2i& new_position)
 {
     position_ = new_position;
+}
+
+
+
+sf::Vector2i Apple::GetPosition() const
+{
+    return position_;
 }
 
 

@@ -6,6 +6,9 @@ MessageBox::MessageBox(
     const sf::Vector2i& position, const sf::Vector2i& sizes,
     const int char_size)
 {
+    font_.loadFromFile("../data/fonts/FreeSerif.ttf");
+    all_messages_.setFont(font_);
+
     Setup(position, sizes, char_size);
 }
 
@@ -23,17 +26,20 @@ void MessageBox::Setup(
         static_cast<float>(sizes.x),
         static_cast<float>(sizes.y)
     ));
-    background_.setFillColor(sf::Color(32, 32, 32));
+    background_.setFillColor(sf::Color(16, 16, 16));
 
+    all_messages_.setPosition(
+        static_cast<float>(position.x),
+        static_cast<float>(position.y)
+    );
+    all_messages_.setCharacterSize(char_size);
 }
 
 
 
-void MessageBox::Add(const std::string& new_message)
+void MessageBox::Add(const std::string& message)
 {
-    messages_.push_back(new_message);
-
-    // erase
+    messages_.push_back(message);
 }
 
 
@@ -47,13 +53,30 @@ void MessageBox::Clear()
 
 void MessageBox::Update()
 {
+    const float vertical_size = background_.getSize().y;  // in pixels
+    const size_t visible_messages_count = static_cast<size_t>(
+        vertical_size / all_messages_.getCharacterSize()
+    );
+
+    while (messages_.size() > visible_messages_count)
+    {
+        messages_.erase(messages_.begin());
+    }
 }
 
 
 
 void MessageBox::Render(sf::RenderWindow& window)
 {
-    // to one big string
     window.draw(background_);
+
+    std::string all_visible_messages;
+    for (const std::string& message : messages_)
+    {
+        all_visible_messages += (message + "\n");
+    }
+
+    all_messages_.setString(all_visible_messages);
+    window.draw(all_messages_);
 }
 

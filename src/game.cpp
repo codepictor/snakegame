@@ -1,12 +1,14 @@
 #include <ctime>
+#include <string>
+#include <cassert>
 
 #include "game.h"
 
 
 
 extern const int BLOCK_SIZE = 18;  // in pixels
-extern const sf::Vector2i WORLD_SIZES(50, 27);  // in blocks
-extern const sf::Vector2i MESSAGE_BOX_SIZES(WORLD_SIZES.x * BLOCK_SIZE, 80);  // in pixels
+extern const sf::Vector2i WORLD_SIZES(50, 25);  // in blocks
+extern const sf::Vector2i MESSAGE_BOX_SIZES(WORLD_SIZES.x * BLOCK_SIZE, 100);  // in pixels
 
 
 
@@ -19,7 +21,7 @@ Game::Game()
     , message_box_(
         sf::Vector2i(0, WORLD_SIZES.y * BLOCK_SIZE),  // position (in pixels)
         MESSAGE_BOX_SIZES,  // sizes (in pixels)
-        8  // char_size
+        16  // char_size
     )
 {
     // for generating random positions of apple and snake
@@ -66,14 +68,11 @@ void Game::HandleInput()
 
 void Game::Update(const float dt)
 {
-    //std::cerr << "### " << world_.snake_.GetLivesNumber() << std::endl;
-    if (world_.snake_.GetLivesNumber() <= 0)
-    {
-        //std::cerr << "Lose\n";
-    }
-
     main_window_.Update();
+
+    HandleWorldEvents();
     world_.Update(dt);
+
     message_box_.Update();
 }
 
@@ -87,5 +86,54 @@ void Game::Render()
     main_window_.DrawMessageBox(message_box_);
 
     main_window_.EndDraw();
+}
+
+
+
+void Game::HandleWorldEvents()
+{
+    for (const auto& new_event : world_.events_)
+    {
+        std::string new_message;
+
+        if (new_event == World::Event::CollisionWithWall)
+        {
+            new_message += "Collision with wall. ";
+            new_message += ("Lives: " +
+                std::to_string(world_.snake_.GetLivesNumber())
+            );
+        }
+        else if (new_event == World::Event::CollisionWithSnake)
+        {
+            new_message += "Collision with snake. ";
+            new_message += ("Lives: " +
+                std::to_string(world_.snake_.GetLivesNumber())
+            );
+        }
+        else if (new_event == World::Event::CollisionWithApple)
+        {
+            new_message += "Eating apple. ";
+            new_message += ("Score: " +
+                std::to_string(world_.snake_.GetScore())
+            );
+        }
+        else
+        {
+            assert(false);  // Unknown type of World::Event
+        }
+
+        message_box_.Add(new_message);
+    }
+
+    if (world_.snake_.GetLivesNumber() <= 0)
+    {
+        std::string final_message("GAME OVER.");
+        final_message += (" Your score: "
+            + std::to_string(world_.snake_.GetScore())
+            + " . Thanks for playing!"
+        );
+        message_box_.Add(final_message);
+        world_.Create();
+    }
 }
 
