@@ -11,32 +11,40 @@ World::World(const sf::Vector2i& world_size, EventManager& event_manager)
     , snake_(event_manager)
     , apple_(event_manager)
 {
-    apple_.Spawn(FindRandomFreeCell());
-    snake_.Spawn(FindRandomFreeCell());
+    Create();
+}
 
+
+
+void World::Create()
+{
     // number of walls is equal to 4 (up, right, down and left walls)
     walls_.push_back(Wall(
-        {0, 0},
-        {world_sizes_.x - 1, 0}
+        { 0, 0 },
+        { world_sizes_.x - 1, 0 }
     ));
     walls_.push_back(Wall(
-        {0, 0},
-        {0, world_sizes_.y - 1}
+        { 0, 0 },
+        { 0, world_sizes_.y - 1 }
     ));
     walls_.push_back(Wall(
-        {0, world_sizes_.y - 1},
-        {world_sizes_.x - 1, world_sizes_.y - 1}
+        { 0, world_sizes_.y - 1 },
+        { world_sizes_.x - 1, world_sizes_.y - 1 }
     ));
     walls_.push_back(Wall(
-        {world_sizes_.x - 1, 0},
-        {world_sizes_.x - 1, world_sizes_.y - 1}
+        { world_sizes_.x - 1, 0 },
+        { world_sizes_.x - 1, world_sizes_.y - 1 }
     ));
+
+    apple_.Create(FindRandomFreeCell());
+    snake_.Create(FindRandomFreeCell());
 }
 
 
 
 void World::Update(const float dt)
 {
+    events_.clear();
     HandleCollisions();
 
     apple_.Update(dt);
@@ -68,6 +76,7 @@ void World::HandleCollisions()
     {
         snake_.DecreaseLivesNumber();
         snake_.Spawn(FindRandomFreeCell());
+        events_.push_back(Event::CollisionWithSnake);
     }
 
     for (size_t i = 0; i < walls_.size(); i++)
@@ -76,6 +85,7 @@ void World::HandleCollisions()
         {
             snake_.DecreaseLivesNumber();
             snake_.Spawn(FindRandomFreeCell());
+            events_.push_back(Event::CollisionWithWall);
         }
     }
 
@@ -85,6 +95,7 @@ void World::HandleCollisions()
         snake_.Grow();
         snake_.IncreaseScore(10);
         snake_.IncreaseSpeed(1);
+        events_.push_back(Event::CollisionWithApple);
     }
 }
 

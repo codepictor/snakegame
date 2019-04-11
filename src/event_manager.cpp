@@ -2,39 +2,39 @@
 
 
 
-EventManager::SubscriberID EventManager::Subscribe(
+EventManager::SubscriptionID EventManager::Subscribe(
     const sf::Event::EventType event_type,
     std::function<void(const sf::Event&)> callback)
 {
-    const SubscriberID subscriber_id = next_subscriber_id_;
-    subscribers_[event_type].push_back(Subscriber{
-        subscriber_id,
+    const SubscriptionID subscription_id = next_subscription_id_;
+    subscriptions_[event_type].push_back(Subscription{
+        subscription_id,
         callback
     });
 
-    next_subscriber_id_++;
-    return subscriber_id;
+    next_subscription_id_++;
+    return subscription_id;
 }
 
 
 
 bool EventManager::Unsubscribe(
     const sf::Event::EventType event_type,
-    const SubscriberID subscriber_id)
+    const SubscriptionID subscription_id)
 {
-    if (subscribers_.count(event_type) == 0)
+    if (subscriptions_.count(event_type) == 0)
     {
         return false;
     }
 
-    std::vector<Subscriber>& event_subscribers = subscribers_.at(event_type);
-    for (auto it = event_subscribers.begin();
-        it != event_subscribers.end();
+    auto& event_subscriptions = subscriptions_.at(event_type);
+    for (auto it = event_subscriptions.begin();
+        it != event_subscriptions.end();
         it++)
     {
-        if (it->subscriber_id == subscriber_id)
+        if (it->id == subscription_id)
         {
-            event_subscribers.erase(it);
+            event_subscriptions.erase(it);
             return true;
         }
     }
@@ -46,14 +46,14 @@ bool EventManager::Unsubscribe(
 
 void EventManager::HandleEvent(const sf::Event& event)
 {
-    if (subscribers_.count(event.type) == 0)
+    if (subscriptions_.count(event.type) == 0)
     {
         return;
     }
 
-    for (const Subscriber& subscriber : subscribers_.at(event.type))
+    for (const Subscription& subscription : subscriptions_.at(event.type))
     {
-        subscriber.callback(event);
+        subscription.callback(event);
     }
 }
 
@@ -61,6 +61,5 @@ void EventManager::HandleEvent(const sf::Event& event)
 
 void EventManager::Update() const
 {
-
 }
 

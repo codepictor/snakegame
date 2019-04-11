@@ -25,6 +25,17 @@ Snake::Snake(EventManager& event_manager)
 
 
 
+void Snake::Create(const sf::Vector2i& new_position)
+{
+    Spawn(new_position);
+
+    lives_ = 3;
+    speed_ = 30;  // initial speed (blocks / second)
+    score_ = 0;
+}
+
+
+
 void Snake::Spawn(const sf::Vector2i& new_position)
 {
     body_.clear();
@@ -37,7 +48,6 @@ void Snake::Spawn(const sf::Vector2i& new_position)
     body_.push_back(std::move(head));
 
     direction_ = Direction::None;
-    speed_ = 30;
 }
 
 

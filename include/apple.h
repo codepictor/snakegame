@@ -14,9 +14,10 @@ public:
     explicit Apple(EventManager& event_manager);
     virtual ~Apple() = default;
 
-    sf::Vector2i GetPosition() const;
-
+    void Create(const sf::Vector2i& new_position);
     void Spawn(const sf::Vector2i& new_position);
+
+    sf::Vector2i GetPosition() const;
 
     void HandleEvent(const sf::Event& event);
     void Update(const float dt);
