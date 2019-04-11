@@ -30,7 +30,7 @@ void Snake::Create(const sf::Vector2i& new_position)
     Spawn(new_position);
 
     lives_ = 3;
-    speed_ = 30;  // initial speed (blocks / second)
+    speed_ = 10;  // initial speed (blocks / second)
     score_ = 0;
 }
 

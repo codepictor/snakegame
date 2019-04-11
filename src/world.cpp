@@ -3,6 +3,7 @@
 
 
 extern const sf::Vector2i WORLD_SIZES;
+extern const int BLOCK_SIZE;
 
 
 
@@ -49,9 +50,9 @@ void World::Update(const float dt)
 
     apple_.Update(dt);
     snake_.Update(dt);
-    for (size_t i = 0; i < walls_.size(); i++)
+    for (Wall& wall : walls_)
     {
-        walls_[i].Update(dt);
+        wall.Update(dt);
     }
 }
 
@@ -59,13 +60,40 @@ void World::Update(const float dt)
 
 void World::Render(sf::RenderWindow& window)
 {
+    sf::RectangleShape cell_shape;
+    cell_shape.setSize(sf::Vector2f(
+        static_cast<float>(BLOCK_SIZE),
+        static_cast<float>(BLOCK_SIZE)
+    ));
+
+    for (int x = 0; x < WORLD_SIZES.x; x++)
+    {
+        for (int y = 0; y < WORLD_SIZES.y; y++)
+        {
+            if ((x + y) % 2 == 1)
+            {
+                cell_shape.setFillColor(sf::Color(0, 0, 0));
+            }
+            else
+            {
+                cell_shape.setFillColor(sf::Color(16, 16, 16));
+            }
+
+            cell_shape.setPosition(
+                static_cast<float>(x * BLOCK_SIZE),
+                static_cast<float>(y * BLOCK_SIZE)
+            );
+            window.draw(cell_shape);
+        }
+    }
+
+    for (Wall& wall : walls_)
+    {
+        wall.Render(window);
+    }
+
     apple_.Render(window);
     snake_.Render(window);
-
-    for (size_t i = 0; i < walls_.size(); i++)
-    {
-        walls_[i].Render(window);
-    }
 }
 
 
@@ -79,9 +107,9 @@ void World::HandleCollisions()
         events_.push_back(Event::CollisionWithSnake);
     }
 
-    for (size_t i = 0; i < walls_.size(); i++)
+    for (Wall& wall : walls_)
     {
-        if (walls_[i].CheckIsCellInWall(snake_.GetHeadPosition()))
+        if (wall.CheckIsCellInWall(snake_.GetHeadPosition()))
         {
             snake_.DecreaseLivesNumber();
             snake_.Spawn(FindRandomFreeCell());
@@ -112,9 +140,9 @@ sf::Vector2i World::FindRandomFreeCell() const
         );
 
         // Check possible collisions with walls
-        for (size_t i = 0; i < walls_.size(); i++)
+        for (const Wall& wall : walls_)
         {
-            if (walls_[i].CheckIsCellInWall(random_cell_position))
+            if (wall.CheckIsCellInWall(random_cell_position))
             {
                 is_random_cell_collided = true;
                 break;
