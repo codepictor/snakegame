@@ -29,10 +29,11 @@ void MessageBox::Setup(
     background_.setFillColor(sf::Color(16, 16, 16));
 
     all_messages_.setPosition(
-        static_cast<float>(position.x),
-        static_cast<float>(position.y)
+        static_cast<float>(position.x) + text_padding_,
+        static_cast<float>(position.y) + text_padding_
     );
     all_messages_.setCharacterSize(char_size);
+    all_messages_.setFillColor(sf::Color::White);
 }
 
 
@@ -54,8 +55,11 @@ void MessageBox::Clear()
 void MessageBox::Update()
 {
     const float vertical_size = background_.getSize().y;  // in pixels
+    const float line_height = font_.getLineSpacing(       // in pixels
+        all_messages_.getCharacterSize()
+    );
     const size_t visible_messages_count = static_cast<size_t>(
-        vertical_size / all_messages_.getCharacterSize()
+        (vertical_size - 2.0f * text_padding_) / line_height
     );
 
     while (messages_.size() > visible_messages_count)

@@ -35,5 +35,6 @@ private:
     sf::RectangleShape background_;
     sf::Font font_;
     sf::Text all_messages_;
+    const float text_padding_ = 4.0f;  // in pixels
 };
 
