@@ -28,7 +28,13 @@ Snake::Snake(EventManager& event_manager)
 void Snake::Spawn(const sf::Vector2i& new_position)
 {
     body_.clear();
-    body_.push_back(Segment{new_position});
+
+    Segment head = {
+        new_position,
+        sf::RectangleShape(),
+        sf::Color::Yellow
+    };
+    body_.push_back(std::move(head));
 
     direction_ = Direction::None;
     speed_ = 30;
@@ -38,7 +44,8 @@ void Snake::Spawn(const sf::Vector2i& new_position)
 
 sf::Vector2i Snake::GetHeadPosition() const
 {
-    return (!body_.empty() ? body_.front().position : sf::Vector2i(-1, -1));
+    assert(!body_.empty());
+    return body_.front().position;
 }
 
 
@@ -96,7 +103,12 @@ void Snake::Grow()
 {
     assert(!body_.empty());
 
-    Segment new_segment = {sf::Vector2i(0, 0)};
+    Segment new_segment = {
+        sf::Vector2i(0, 0),
+        sf::RectangleShape(),
+        sf::Color::Green
+    };
+
     if (body_.size() == 1)
     {
         const Segment& head = body_.front();
