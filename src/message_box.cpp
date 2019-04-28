@@ -55,7 +55,7 @@ void MessageBox::Clear()
 void MessageBox::Update()
 {
     const float vertical_size = background_.getSize().y;  // in pixels
-    const float line_height = font_.getLineSpacing(       // in pixels
+    const float line_height = font_.getLineSpacing(  // in pixels
         all_messages_.getCharacterSize()
     );
     const size_t visible_messages_count = static_cast<size_t>(

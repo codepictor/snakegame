@@ -8,6 +8,7 @@
 
 
 extern const int BLOCK_SIZE;
+extern const sf::Vector2i WORLD_SIZES;
 
 
 
@@ -27,10 +28,13 @@ Snake::Snake(EventManager& event_manager)
 
 void Snake::Create(const sf::Vector2i& new_position)
 {
+    assert(0 <= new_position.x && new_position.x < WORLD_SIZES.x);
+    assert(0 <= new_position.y && new_position.y < WORLD_SIZES.y);
+
     Spawn(new_position);
 
     lives_ = 3;
-    speed_ = 10;  // initial speed (blocks / second)
+    speed_ = 10;
     score_ = 0;
 }
 
@@ -38,14 +42,15 @@ void Snake::Create(const sf::Vector2i& new_position)
 
 void Snake::Spawn(const sf::Vector2i& new_position)
 {
-    body_.clear();
+    assert(0 <= new_position.x && new_position.x < WORLD_SIZES.x);
+    assert(0 <= new_position.y && new_position.y < WORLD_SIZES.y);
 
-    Segment head = {
+    body_.clear();
+    body_.push_back(Segment{
         new_position,
         sf::RectangleShape(),
         sf::Color::Yellow
-    };
-    body_.push_back(std::move(head));
+    });
 
     direction_ = Direction::None;
 }

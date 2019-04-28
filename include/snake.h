@@ -65,8 +65,8 @@ private:
 
     std::vector<Segment> body_;
     Direction direction_ = Direction::None;
-    int speed_;  // cells per second
-    int lives_;
-    int score_;
+    int speed_ = 0;  // initial speed (blocks per second)
+    int lives_ = 0;  // initial number of lives
+    int score_ = 0;  // initial score
 };
 

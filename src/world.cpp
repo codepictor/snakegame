@@ -19,7 +19,6 @@ World::World(const sf::Vector2i& world_size, EventManager& event_manager)
 
 void World::Create()
 {
-    // number of walls is equal to 4 (up, right, down and left walls)
     walls_.push_back(Wall(
         { 0, 0 },
         { world_sizes_.x - 1, 0 }
@@ -152,10 +151,10 @@ sf::Vector2i World::FindRandomFreeCell() const
         // Check possible collisions with snake
         if (!is_random_cell_collided)
         {
-            const std::vector<Snake::Segment>& snake_body = snake_.GetBody();
-            for (size_t i = 0; i < snake_body.size(); i++)
+            const auto& snake_body = snake_.GetBody();
+            for (const auto& snake_segment : snake_body)
             {
-                if (snake_body[i].position == random_cell_position)
+                if (snake_segment.position == random_cell_position)
                 {
                     is_random_cell_collided = true;
                     break;

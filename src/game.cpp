@@ -40,8 +40,12 @@ void Game::Run()
 
     while (true)
     {
-        time_since_last_update += clock.restart();
+        if (main_window_.CheckIsClosed())
+        {
+            return;
+        }
 
+        time_since_last_update += clock.restart();
         while (time_since_last_update > time_per_frame)
         {
             time_since_last_update -= time_per_frame;
@@ -50,11 +54,6 @@ void Game::Run()
         }
 
         Render();
-
-        if (main_window_.CheckIsClosed())
-        {
-            return;
-        }
     }
 }
 
