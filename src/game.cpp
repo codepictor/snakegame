@@ -7,7 +7,7 @@
 
 
 extern const int BLOCK_SIZE = 18;  // in pixels
-extern const sf::Vector2i WORLD_SIZES(5, 5);  // in blocks
+extern const sf::Vector2i WORLD_SIZES(50, 25);  // in blocks
 extern const sf::Vector2i MESSAGE_BOX_SIZES(WORLD_SIZES.x * BLOCK_SIZE, 100);  // in pixels
 
 

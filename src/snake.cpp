@@ -31,10 +31,11 @@ void Snake::Create(const sf::Vector2i& new_position)
     assert(0 <= new_position.x && new_position.x < WORLD_SIZES.x);
     assert(0 <= new_position.y && new_position.y < WORLD_SIZES.y);
 
+    body_.clear();
     Spawn(new_position);
 
     lives_ = 3;
-    speed_ = 1;
+    speed_ = 10;
     score_ = 0;
 }
 
@@ -82,7 +83,7 @@ int Snake::GetSpeed() const
 
 void Snake::IncreaseSpeed(const int delta)
 {
-    //speed_ += delta;
+    speed_ += delta;
 }
 
 
@@ -111,6 +112,13 @@ int Snake::GetScore() const
 void Snake::IncreaseScore(const int delta)
 {
     score_ += delta;
+}
+
+
+
+void Snake::DeleteBody()
+{
+    body_.clear();
 }
 
 
@@ -273,28 +281,25 @@ void Snake::Render(sf::RenderWindow& window)
         return;
     }
 
-    Segment& head = body_.front();
-    head.shape.setFillColor(sf::Color::Yellow);
-    head.shape.setPosition(
-        static_cast<float>(head.position.x * BLOCK_SIZE),
-        static_cast<float>(head.position.y * BLOCK_SIZE)
-    );
-    head.shape.setSize(sf::Vector2f(
-        static_cast<float>(BLOCK_SIZE - 1),
-        static_cast<float>(BLOCK_SIZE - 1)
-    ));
-    window.draw(head.shape);
-
-    for (size_t i = 1; i < body_.size(); i++)
+    for (size_t i = 0; i < body_.size(); i++)
     {
-        body_[i].shape.setFillColor(sf::Color::Green);
+        if (i == 0)
+        {
+            body_[i].shape.setFillColor(sf::Color::Yellow);
+        }
+        else
+        {
+            body_[i].shape.setFillColor(sf::Color::Green);
+        }
+
+        const float padding = 0.5f;  // in pixels
         body_[i].shape.setPosition(
-            static_cast<float>(body_[i].position.x * BLOCK_SIZE),
-            static_cast<float>(body_[i].position.y * BLOCK_SIZE)
+            static_cast<float>(body_[i].position.x * BLOCK_SIZE) + padding,
+            static_cast<float>(body_[i].position.y * BLOCK_SIZE) + padding
         );
         body_[i].shape.setSize(sf::Vector2f(
-            static_cast<float>(BLOCK_SIZE - 1),
-            static_cast<float>(BLOCK_SIZE - 1)
+            static_cast<float>(BLOCK_SIZE) - 2.0f * padding,
+            static_cast<float>(BLOCK_SIZE) - 2.0f * padding
         ));
         window.draw(body_[i].shape);
     }

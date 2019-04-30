@@ -101,8 +101,10 @@ void World::HandleCollisions()
 {
     if (snake_.CheckSelfCollision())
     {
-        snake_.DecreaseLivesNumber();
+        snake_.DeleteBody();
         snake_.Spawn(FindRandomFreeCell());
+        apple_.Spawn(FindRandomFreeCell());
+        snake_.DecreaseLivesNumber();
         events_.push_back(Event::CollisionWithSnake);
     }
 
@@ -110,16 +112,18 @@ void World::HandleCollisions()
     {
         if (wall.CheckIsCellInWall(snake_.GetHeadPosition()))
         {
-            snake_.DecreaseLivesNumber();
+            snake_.DeleteBody();
             snake_.Spawn(FindRandomFreeCell());
+            apple_.Spawn(FindRandomFreeCell());
+            snake_.DecreaseLivesNumber();
             events_.push_back(Event::CollisionWithWall);
         }
     }
 
     if (snake_.GetHeadPosition() == apple_.GetPosition())
     {
-        apple_.Spawn(FindRandomFreeCell());
         snake_.Grow();
+        apple_.Spawn(FindRandomFreeCell());
         snake_.IncreaseScore(10);
         snake_.IncreaseSpeed(1);
         events_.push_back(Event::CollisionWithApple);
@@ -131,49 +135,16 @@ void World::HandleCollisions()
 sf::Vector2i World::FindRandomFreeCell() const
 {
     const int max_iter_number = 1000;
-
     for (int i = 0; i < max_iter_number; i++)
     {
-        bool is_random_cell_collided = false;
         const sf::Vector2i random_cell_position(
             std::rand() % world_sizes_.x,
             std::rand() % world_sizes_.y
         );
 
-        // Check possible collisions with walls
-        for (const Wall& wall : walls_)
-        {
-            if (wall.CheckIsCellInWall(random_cell_position))
-            {
-                is_random_cell_collided = true;
-                break;
-            }
-        }
-
-        // Check possible collisions with snake
-        if (!is_random_cell_collided)
-        {
-            const auto& snake_body = snake_.GetBody();
-            for (const auto& snake_segment : snake_body)
-            {
-                if (snake_segment.position == random_cell_position)
-                {
-                    is_random_cell_collided = true;
-                    break;
-                }
-            }
-        }
-
-        // Check possible collision with apple
-        if (!is_random_cell_collided)
-        {
-            if (apple_.GetPosition() == random_cell_position)
-            {
-                is_random_cell_collided = true;
-            }
-        }
-
-        if (!is_random_cell_collided)
+        if (!CheckIsCellInWalls(random_cell_position) &&
+            !CheckIsCellInSnake(random_cell_position) &&
+            random_cell_position != apple_.GetPosition())
         {
             return random_cell_position;
         }
@@ -181,8 +152,52 @@ sf::Vector2i World::FindRandomFreeCell() const
 
     // We haven't found any free cell. Maybe all cells are busy?
     // Now we are going to find a free cell by checking all existing cells.
-    // TODO: Check all cells
-    return sf::Vector2i(-1, -1);
+    for (int x = 0; x < WORLD_SIZES.x; x++)
+    {
+        for (int y = 0; y < WORLD_SIZES.y; y++)
+        {
+            const sf::Vector2i checking_cell(x, y);
+            if (!CheckIsCellInWalls(checking_cell) &&
+                !CheckIsCellInSnake(checking_cell) &&
+                checking_cell != apple_.GetPosition())
+            {
+                return checking_cell;
+            }
+        }
+    }
+
+    const int poison_coord = -1;
+    return sf::Vector2i(poison_coord, poison_coord);
 }
 
+
+
+bool World::CheckIsCellInWalls(const sf::Vector2i& cell) const
+{
+    for (const Wall& wall : walls_)
+    {
+        if (wall.CheckIsCellInWall(cell))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+bool World::CheckIsCellInSnake(const sf::Vector2i& cell) const
+{
+    const auto& snake_body = snake_.GetBody();
+    for (const auto& snake_segment : snake_body)
+    {
+        if (snake_segment.position == cell)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 

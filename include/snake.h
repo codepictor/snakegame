@@ -38,6 +38,7 @@ public:
 
     void Create(const sf::Vector2i& new_position);
     void Spawn(const sf::Vector2i& new_position);
+    void DeleteBody();
     void Grow();
     bool CheckSelfCollision() const;
     

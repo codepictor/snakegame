@@ -37,6 +37,8 @@ private:
 
     void HandleCollisions();
     sf::Vector2i FindRandomFreeCell() const;
+    bool CheckIsCellInWalls(const sf::Vector2i& cell) const;
+    bool CheckIsCellInSnake(const sf::Vector2i& cell) const;
 
     sf::Vector2i world_sizes_;
 
