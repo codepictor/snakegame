@@ -130,7 +130,9 @@ void World::HandleCollisions()
 
 sf::Vector2i World::FindRandomFreeCell() const
 {
-    while (true)
+    const int max_iter_number = 1000;
+
+    for (int i = 0; i < max_iter_number; i++)
     {
         bool is_random_cell_collided = false;
         const sf::Vector2i random_cell_position(
@@ -176,7 +178,11 @@ sf::Vector2i World::FindRandomFreeCell() const
             return random_cell_position;
         }
     }
-}
 
+    // We haven't found any free cell. Maybe all cells are busy?
+    // Now we are going to find a free cell by checking all existing cells.
+    // TODO: Check all cells
+    return sf::Vector2i(-1, -1);
+}
 
 

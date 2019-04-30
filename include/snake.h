@@ -65,6 +65,8 @@ private:
 
     std::vector<Segment> body_;
     Direction direction_ = Direction::None;
+    sf::Vector2i prev_tail_position_;  // for growing
+
     int speed_ = 0;  // initial speed (blocks per second)
     int lives_ = 0;  // initial number of lives
     int score_ = 0;  // initial score

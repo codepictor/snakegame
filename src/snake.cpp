@@ -34,7 +34,7 @@ void Snake::Create(const sf::Vector2i& new_position)
     Spawn(new_position);
 
     lives_ = 3;
-    speed_ = 10;
+    speed_ = 1;
     score_ = 0;
 }
 
@@ -52,6 +52,7 @@ void Snake::Spawn(const sf::Vector2i& new_position)
         sf::Color::Yellow
     });
 
+    prev_tail_position_ = body_.back().position;
     direction_ = Direction::None;
 }
 
@@ -81,7 +82,7 @@ int Snake::GetSpeed() const
 
 void Snake::IncreaseSpeed(const int delta)
 {
-    speed_ += delta;
+    //speed_ += delta;
 }
 
 
@@ -118,77 +119,11 @@ void Snake::Grow()
 {
     assert(!body_.empty());
 
-    Segment new_segment = {
-        sf::Vector2i(0, 0),
+    body_.push_back(Segment{
+        prev_tail_position_,
         sf::RectangleShape(),
         sf::Color::Green
-    };
-
-    if (body_.size() == 1)
-    {
-        const Segment& head = body_.front();
-        switch (direction_)
-        {
-            case Direction::Up:
-                new_segment.position = sf::Vector2i(
-                    head.position.x,
-                    head.position.y + 1
-                );
-                break;
-
-            case Direction::Right:
-                new_segment.position = sf::Vector2i(
-                    head.position.x - 1,
-                    head.position.y
-                );
-                break;
-
-            case Direction::Down:
-                new_segment.position = sf::Vector2i(
-                    head.position.x,
-                    head.position.y - 1
-                );
-                break;
-
-            case Direction::Left:
-                new_segment.position = sf::Vector2i(
-                    head.position.x + 1,
-                    head.position.y
-                );
-                break;
-
-            default:;  // no direction to grow
-        }
-
-        body_.push_back(std::move(new_segment));
-        return;
-    }
-
-    // now length of the snake >= 2
-    assert(body_.size() >= 2);
-    const Segment& tail = body_[body_.size() - 1];
-    const Segment& before_tail = body_[body_.size() - 2];
-    assert(tail.position.x == before_tail.position.x ||
-           tail.position.y == before_tail.position.y);
-
-    if (tail.position.x == before_tail.position.x)
-    {
-        assert(abs(tail.position.y - before_tail.position.y) == 1);
-        new_segment.position.x = tail.position.x;
-        new_segment.position.y = tail.position.y + (
-            tail.position.y > before_tail.position.y ? 1 : -1
-        );
-    }
-    else
-    {
-        assert(abs(tail.position.x - before_tail.position.x) == 1);
-        new_segment.position.y = tail.position.y;
-        new_segment.position.x = tail.position.x + (
-            tail.position.x > before_tail.position.x ? 1 : -1
-        );
-    }
-
-    body_.push_back(std::move(new_segment));
+    });
 }
 
 
@@ -226,15 +161,16 @@ void Snake::Update(const float dt)
     assert(!body_.empty());
     
     time_since_last_move_ += dt;
-    const float move_time = 1.0f / static_cast<float>(speed_);
-    while (time_since_last_move_ >= move_time)
+    const float one_move_time = 1.0f / static_cast<float>(speed_);
+    while (time_since_last_move_ >= one_move_time)
     {
         SetNewDirection();
         if (direction_ != Direction::None)
         {
             MoveByOneCell();
         }
-        time_since_last_move_ -= move_time;
+
+        time_since_last_move_ -= one_move_time;
     }
 }
 
@@ -282,11 +218,9 @@ void Snake::SetNewDirection()
 void Snake::MoveByOneCell()
 {
     assert(!body_.empty());
-    if (direction_ == Direction::None || body_.empty())
-    {
-        return;
-    }
+    assert(direction_ != Direction::None);
 
+    prev_tail_position_ = body_.back().position;
     for (size_t i = body_.size() - 1; i > 0; i--)
     {
         body_[i].position = body_[i - 1].position;
@@ -310,8 +244,6 @@ void Snake::MoveByOneCell()
         case Direction::Left:
             head.position.x--;
             break;
-
-        default:;  // no movement should be done
     }
 }
 
